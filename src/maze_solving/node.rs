@@ -1,8 +1,6 @@
-use super::maze::Location;
+use super::maze::{Location, Maze, Cell};
 use std::cmp::Ordering;
-use std::fmt;
-
-pub type Stack<T> = Vec<T>;
+ 
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Node {
@@ -21,7 +19,7 @@ impl Node {
             heuristic: 0.0,
         }
     }
-
+    /// Uses the parent value to calculate the path of locations to arrive to this node.
     pub fn to_path(node: &Node) -> Vec<Location> {
         let mut n: Node = node.clone();
         let mut path: Vec<Location> = vec![];
@@ -33,6 +31,29 @@ impl Node {
         path
     }
 
+    /// Calculates the list of neighbours to self
+    pub fn successors(&self, maze: &Maze) -> Vec<Location> {
+        let mut locations = vec![];
+        let (x, y) = self.state.clone();
+
+        if x + 1 < maze.rows as i32 && maze.grid[(x + 1) as usize][y as usize] != Cell::BLOCKED {
+            locations.push((x + 1, y));
+        }
+
+        if (x - 1) >= 0 && maze.grid[(x - 1) as usize][y as usize] != Cell::BLOCKED {
+            locations.push((x - 1, y));
+        }
+
+        if y + 1 < maze.cols as i32 && maze.grid[x as usize][(y + 1) as usize] != Cell::BLOCKED {
+            locations.push((x, y + 1));
+        }
+
+        if (y - 1) >= 0 && maze.grid[x as usize][(y - 1) as usize] != Cell::BLOCKED {
+            locations.push((x, y - 1));
+        }
+
+        locations
+    }
 }
 
 impl PartialOrd for Node {
@@ -44,3 +65,4 @@ impl PartialOrd for Node {
         (self.cost + self.heuristic) < (other.cost + other.heuristic)
     }
 }
+

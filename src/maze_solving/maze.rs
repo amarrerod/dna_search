@@ -33,8 +33,8 @@ impl fmt::Display for Cell {
 /// A Maze
 #[derive(Debug)]
 pub struct Maze {
-    rows: usize,
-    cols: usize,
+    pub rows: usize,
+    pub cols: usize,
     pub start_location: Location,
     pub goal_location: Location,
     sparseness: f64,
@@ -78,65 +78,17 @@ impl Maze {
         self.grid[gx as usize][gy as usize] = Cell::GOAL;
     }
 
-    pub fn successors(&self, loc: &Location) -> Vec<Location> {
-        let mut locations = vec![];
-        let (x, y) = loc.clone();
-
-        if x + 1 < self.rows as i32 && self.grid[(x + 1) as usize][y as usize] != Cell::BLOCKED {
-            locations.push((x + 1, y));
-        }
-
-        if (x - 1) >= 0 && self.grid[(x - 1) as usize][y as usize] != Cell::BLOCKED {
-            locations.push((x - 1, y));
-        }
-
-        if y + 1 < self.cols as i32 && self.grid[x as usize][(y + 1) as usize] != Cell::BLOCKED {
-            locations.push((x, y + 1));
-        }
-
-        if (y - 1) >= 0 && self.grid[x as usize][(y - 1) as usize] != Cell::BLOCKED {
-            locations.push((x, y - 1));
-        }
-
-        locations
-    }
 }
 
 impl fmt::Display for Maze {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         for r in 0..self.rows {
             for c in 0..self.cols {
-                write!(f, "{}", self.grid[r][c]);
+                _ = write!(f, "{}", self.grid[r][c]);
             }
-            write!(f, "\n");
+            _ = write!(f, "\n");
         }
         write!(f, " ")
     }
 }
 
-pub struct Solution<'a> {
-    maze: &'a Maze,
-    path: Vec<Location>,
-}
-
-impl<'a> Solution<'a> {
-    pub fn new(maze: &Maze, path: Vec<Location>) -> Solution {
-        Solution { maze, path }
-    }
-}
-
-impl<'a> fmt::Display for Solution<'a> {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        for r in 0..self.maze.rows {
-            for c in 0..self.maze.cols {
-                if self.path.contains(&(r as i32, c as i32)) {
-                    write!(f, "\x1b[93m*\x1b[0m");
-                } else {
-                    write!(f, "{}", self.maze.grid[r][c]);
-                }
-            }
-            write!(f, "\n");
-        }
-        write!(f, " ")
-    }
-}
