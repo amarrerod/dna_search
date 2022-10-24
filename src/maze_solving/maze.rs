@@ -18,7 +18,7 @@ pub enum Cell {
     GOAL = 2,
 }
 /// Custom display of cells using 
-/// ▉ for empty cells, X for blocked cells, S for the start cell and G for the goal cell
+/// ▉ for empty cells, X for blocked cells, S for the start cell and  G for the goal cell
 impl fmt::Display for Cell {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
@@ -78,7 +78,7 @@ impl Maze {
         self.grid[gx as usize][gy as usize] = Cell::GOAL;
     }
 
-    pub fn successor(&self, loc: &Location) -> Vec<Location> {
+    pub fn successors(&self, loc: &Location) -> Vec<Location> {
         let mut locations = vec![];
         let (x, y) = loc.clone();
 
@@ -114,18 +114,18 @@ impl fmt::Display for Maze {
     }
 }
 
-pub struct Solution {
-    maze: Maze,
+pub struct Solution<'a> {
+    maze: &'a Maze,
     path: Vec<Location>,
 }
 
-impl Solution {
-    pub fn new(maze: Maze, path: Vec<Location>) -> Solution {
+impl<'a> Solution<'a> {
+    pub fn new(maze: &Maze, path: Vec<Location>) -> Solution {
         Solution { maze, path }
     }
 }
 
-impl fmt::Display for Solution {
+impl<'a> fmt::Display for Solution<'a> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         for r in 0..self.maze.rows {
             for c in 0..self.maze.cols {
