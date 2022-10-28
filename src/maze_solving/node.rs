@@ -66,3 +66,17 @@ impl PartialOrd for Node {
     }
 }
 
+impl Ord for Node {
+    fn cmp(&self, other: &Self) -> Ordering {
+        if self.cost > other.cost {
+            Ordering::Less
+        } else if other.cost > self.cost {
+            Ordering::Greater
+        } else {
+            Ordering::Equal
+        }
+    }
+}
+
+
+impl Eq for Node {}
